@@ -1,0 +1,31 @@
+{
+  "name": "@sean_kenny/tga-to-png-js",
+  "version": "0.0.0",
+  "description": "A library which parses a Truevision TGA (.tga) file and uses sharp to transform it into to a png file.",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest"
+  },
+  "files": [
+    "build"
+  ],
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "author": "Sean Kenny",
+  "type": "module",
+  "dependencies": {
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
+  },
+  "engines": {
+    "node": "^20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SeanKennyNF/tga-to-png-js.git"
+  }
+}
