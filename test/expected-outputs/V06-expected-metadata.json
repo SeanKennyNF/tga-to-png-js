@@ -1,0 +1,20 @@
+{
+  "imageIdLengthBytes": 0,
+  "colourMapPresent": false,
+  "imageType": "RUN_LENGTH_ENCODED_TRUE_COLOUR_IMAGE",
+  "colourMapSpecification": {
+    "firstEntryIndex": 0,
+    "numberOfEntriesInColourMap": 0,
+    "colourMapEntrySizeBits": 0
+  },
+  "imageSpecification": {
+    "xOrigin": 0,
+    "yOrigin": 0,
+    "imageWidthPx": 128,
+    "imageHeightPx": 128,
+    "imageBitsPerPixel": 24,
+    "alphaChannelDepth": 1,
+    "horizontalPixelOrdering": "RIGHT_TO_LEFT",
+    "verticalPixelOrdering": "BOTTOM_TO_TOP"
+  }
+}

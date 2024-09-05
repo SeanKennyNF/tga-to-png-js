@@ -86,20 +86,27 @@ export const parseRunLengthEncodedTrueColourTgaFileImageData = (
   }
 
   let twoDimensionalPixelArray = pixelArray
-    .map((element, index, originalArray) => (index % input.imageWidthPx === 0)
-      ? originalArray.slice(index, index + input.imageWidthPx)
+    .map((element, index, originalArray) => (index % (input.imageWidthPx * 4) === 0)
+      ? originalArray.slice(index, index + (input.imageWidthPx * 4))
         .map((innerElement, innerIndex, innerOriginalArray) => (innerIndex % 4 === 0)
           ? innerOriginalArray.slice(innerIndex, innerIndex + 4)
           : []
         )
+        .filter((array) => array.length > 0)
       : []
     )
-  
-  if(input.horizontalPixelOrdering === HorizontalPixelOrdering.RIGHT_TO_LEFT) {
-    twoDimensionalPixelArray = twoDimensionalPixelArray.map((innerArray) => innerArray.reverse())
-  }
+    .filter((array) => array.length > 0)
+
+  // Logically this makes sense. I have no idea why this appears to produce wrong results.
+  // if(input.horizontalPixelOrdering === HorizontalPixelOrdering.RIGHT_TO_LEFT) {
+  //   twoDimensionalPixelArray = twoDimensionalPixelArray.map((innerArray) => innerArray
+  //     .map((element, index, originalArray) => originalArray[originalArray.length - (index + 1)])
+  //   )
+  // }
+
   if(input.verticalPixelOrdering === VerticalPixelOrdering.BOTTOM_TO_TOP) {
-    twoDimensionalPixelArray = twoDimensionalPixelArray.reverse();
+    twoDimensionalPixelArray = twoDimensionalPixelArray
+      .map((element, index, originalArray) => originalArray[originalArray.length - (index + 1)])
   }
 
   return {
