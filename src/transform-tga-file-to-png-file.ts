@@ -1,7 +1,7 @@
 import { readFile } from "fs/promises";
 import sharp from 'sharp';
 import { parseTgaFileMetadata, TgaFileMetadata } from "./parse-tga-file-metadata.js";
-import { parseTgaFileImageData } from "./parse-tga-file-image-data/parse-tga-file-image-data.js";
+import { isSupportedImageBitsPerPixel, parseTgaFileImageData } from "./parse-tga-file-image-data/parse-tga-file-image-data.js";
 
 interface TransformTgaFileToPngFileInput {
   inputFilePath: string;
@@ -22,13 +22,17 @@ export const transformTgaFileToPngFile = async(input: TransformTgaFileToPngFileI
     throw new Error('TGA files with colour maps are currently unsupported.');
   }
 
-  const numberOfChannels = (metadata.imageSpecification.alphaChannelDepth === 1) ? 4 : 3;
+  const { imageBitsPerPixel } = metadata.imageSpecification
+
+  if(!isSupportedImageBitsPerPixel(imageBitsPerPixel)) {
+    throw new Error('TGA files with bits per pixel values that are not 24 or 32 are not supported (Author of the library is unbelievably lazy).');
+  }
 
   const { pixelArray, bytesReadForImageData } = parseTgaFileImageData({
     hexTgaFileData,
     imageType: metadata.imageType,
     bytesReadForMetadata,
-    numberOfChannels,
+    imageBitsPerPixel,
     imageWidthPx: metadata.imageSpecification.imageWidthPx,
     imageHeightPx: metadata.imageSpecification.imageHeightPx,
     horizontalPixelOrdering: metadata.imageSpecification.horizontalPixelOrdering,
@@ -41,7 +45,7 @@ export const transformTgaFileToPngFile = async(input: TransformTgaFileToPngFileI
       raw: {
         width: metadata.imageSpecification.imageWidthPx,
         height: metadata.imageSpecification.imageHeightPx,
-        channels: numberOfChannels
+        channels: 4
       }
     }
   );

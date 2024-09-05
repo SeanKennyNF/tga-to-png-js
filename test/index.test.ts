@@ -15,6 +15,12 @@ const testCases = [{
   metadataArtifactFilename: 'A19-metadata.json',
   expectedOutputImageFilename: 'A19-expected-output.png',
   expectedOutputMetadataFilename: 'A19-expected-metadata.json'
+}, {
+  inputFilename: 'A20.tga',
+  artifactFilename: 'A20-output.png',
+  metadataArtifactFilename: 'A20-metadata.json',
+  expectedOutputImageFilename: 'A20-expected-output.png',
+  expectedOutputMetadataFilename: 'A20-expected-metadata.json'
 }];
 
 test.each(testCases)('transformTgaFileToPngFile should produce the right input for $inputFilename', async({

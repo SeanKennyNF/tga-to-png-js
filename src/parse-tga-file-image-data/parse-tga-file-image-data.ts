@@ -2,11 +2,13 @@ import { HorizontalPixelOrdering, ImageType, VerticalPixelOrdering } from "../pa
 import { parseRunLengthEncodedTrueColourTgaFileImageData } from "./parse-run-length-encoded-true-colour-tga-file-image.js";
 import { parseUnencodedTrueColourTgaFileImageData } from "./parse-unencoded-true-colour-tga-file-image-data.js";
 
+export const isSupportedImageBitsPerPixel = (input: number): input is 24 | 32 => input === 24 || input === 32;
+
 export interface ParseTgaFileImageDataInput {
   hexTgaFileData: string;
   imageType: ImageType | 'UNKNOWN';
   bytesReadForMetadata: number;
-  numberOfChannels: 3 | 4;
+  imageBitsPerPixel: 24 | 32;
   imageWidthPx: number;
   imageHeightPx: number;
   horizontalPixelOrdering: HorizontalPixelOrdering;

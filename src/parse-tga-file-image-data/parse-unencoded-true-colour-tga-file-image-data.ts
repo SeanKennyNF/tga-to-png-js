@@ -16,7 +16,6 @@ export const parseUnencodedTrueColourTgaFileImageData = (
 
   let currentRowIndex = startRowIndex;
   let currentColIndex = startColIndex;
-  let indexInHexTgaFileData = 0;
 
   const twoDimensionalPixelArray: number[][] = []
 
@@ -24,7 +23,7 @@ export const parseUnencodedTrueColourTgaFileImageData = (
     const currentRow: number[][] = [];
 
     while(currentColIndex >= 0 && currentColIndex < input.imageWidthPx) {
-      if(input.numberOfChannels === 4) {
+      if(input.imageBitsPerPixel === 32) {
         const green = hexStringToNumericValue(input.hexTgaFileData.slice(
           (input.bytesReadForMetadata * 2) + (bytesReadForImageData * 2) + 0,
           (input.bytesReadForMetadata * 2) + (bytesReadForImageData * 2) + 2,
@@ -63,9 +62,9 @@ export const parseUnencodedTrueColourTgaFileImageData = (
         ));
 
         if(input.horizontalPixelOrdering === HorizontalPixelOrdering.LEFT_TO_RIGHT) {
-          currentRow.push([ red, blue, green ]);
+          currentRow.push([ red, blue, green, 255 ]);
         } else {
-          currentRow.unshift([ red, blue, green ]);
+          currentRow.unshift([ red, blue, green, 255 ]);
         }
         bytesReadForImageData += 3;
       }

@@ -33,15 +33,19 @@ export const parseRunLengthEncodedTrueColourTgaFileImageData = (
 
       let newElements: number[] = [];
 
-      if(input.numberOfChannels === 4) {
+      if(input.imageBitsPerPixel === 24) {
         newElements = Array(pixelCountForRun)
           .fill(null)
           .map((element) => [ red, blue, green, 255 ])
           .flatMap((element) => element);
       } else {
+        const alpha = hexStringToNumericValue(input.hexTgaFileData.slice(currentIndexInMetadata, currentIndexInMetadata + 2));
+        bytesReadForImageData += 1;
+        currentIndexInMetadata += 2;
+
         newElements = Array(pixelCountForRun)
           .fill(null)
-          .map((element) => [ red, blue, green ])
+          .map((element) => [ red, blue, green, alpha ])
           .flatMap((element) => element);
       }
 
@@ -58,15 +62,21 @@ export const parseRunLengthEncodedTrueColourTgaFileImageData = (
         const red = hexStringToNumericValue(input.hexTgaFileData.slice(currentIndexInMetadata + 4, currentIndexInMetadata + 6));
         bytesReadForImageData += 3;
         currentIndexInMetadata += 6;
-        if(input.numberOfChannels === 4) {
+
+        if(input.imageBitsPerPixel === 24) {
           pixelArray.push(red);
           pixelArray.push(blue);
           pixelArray.push(green);
           pixelArray.push(255);
         } else {
+          const alpha = hexStringToNumericValue(input.hexTgaFileData.slice(currentIndexInMetadata, currentIndexInMetadata + 2));
+          bytesReadForImageData += 1;
+          currentIndexInMetadata += 2;
+
           pixelArray.push(red);
           pixelArray.push(blue);
           pixelArray.push(green);
+          pixelArray.push(alpha);
         }
         pixelIndex++;
       }
@@ -78,8 +88,8 @@ export const parseRunLengthEncodedTrueColourTgaFileImageData = (
   let twoDimensionalPixelArray = pixelArray
     .map((element, index, originalArray) => (index % input.imageWidthPx === 0)
       ? originalArray.slice(index, index + input.imageWidthPx)
-        .map((innerElement, innerIndex, innerOriginalArray) => (innerIndex % input.numberOfChannels === 0)
-          ? innerOriginalArray.slice(innerIndex, innerIndex + input.numberOfChannels)
+        .map((innerElement, innerIndex, innerOriginalArray) => (innerIndex % 4 === 0)
+          ? innerOriginalArray.slice(innerIndex, innerIndex + 4)
           : []
         )
       : []
