@@ -4,12 +4,12 @@ import { readFile, writeFile } from 'fs/promises';
 import { transformTgaFileToPngFile } from '../src';
 
 const testCases = [{
-//  inputFilename: 'A01.tga',
-//  artifactFilename: 'A01-output.png',
-//  metadataArtifactFilename: 'A01-metadata.json',
-//  expectedOutputImageFilename: 'A01-expected-output.png',
-//  expectedOutputMetadataFilename: 'A01-expected-metadata.json'
-//}, {
+  inputFilename: 'A01.tga',
+  artifactFilename: 'A01-output.png',
+  metadataArtifactFilename: 'A01-metadata.json',
+  expectedOutputImageFilename: 'A01-expected-output.png',
+  expectedOutputMetadataFilename: 'A01-expected-metadata.json'
+}, {
   inputFilename: 'A19.tga',
   artifactFilename: 'A19-output.png',
   metadataArtifactFilename: 'A19-metadata.json',

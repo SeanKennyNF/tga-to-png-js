@@ -1,8 +1,7 @@
 import { readFile } from "fs/promises";
 import sharp from 'sharp';
 import { parseTgaFileMetadata, TgaFileMetadata } from "./parse-tga-file-metadata.js";
-import { parseTgaFileImageData } from "./parse-tga-file-image-data.js";
-
+import { parseTgaFileImageData } from "./parse-tga-file-image-data/parse-tga-file-image-data.js";
 
 interface TransformTgaFileToPngFileInput {
   inputFilePath: string;
@@ -27,6 +26,7 @@ export const transformTgaFileToPngFile = async(input: TransformTgaFileToPngFileI
 
   const { pixelArray, bytesReadForImageData } = parseTgaFileImageData({
     hexTgaFileData,
+    imageType: metadata.imageType,
     bytesReadForMetadata,
     numberOfChannels,
     imageWidthPx: metadata.imageSpecification.imageWidthPx,

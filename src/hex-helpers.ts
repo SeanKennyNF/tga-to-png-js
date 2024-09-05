@@ -1,11 +1,16 @@
 export const hexStringToNumericValue = (hexString: string): number => {
-  // As it turns out, BMP files store numbers in a little endian format so I just turn it into big endian before converting.
+  // As it turns out, TGA files store numbers in a little endian format so I just turn it into big endian before converting.
   const bigEndianHexString = hexString
     .match(/..?/g)
     ?.reverse()
     ?.join('') ?? '';
 
   return parseInt(bigEndianHexString, 16);
+}
+
+export const bitValuesToNumericValue = (bitValues: Array<0 | 1>): number => {
+  return bitValues
+    .reduce<number>((accumulator, value, index, fullArray) => accumulator + (value * Math.pow(2, (fullArray.length - index) - 1)), 0)
 }
 
 export const hexStringToBitValues = (hexString: string): Array<0 | 1> => {

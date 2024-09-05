@@ -1,25 +1,11 @@
-import { hexStringToNumericValue } from "./hex-helpers.js";
-import { HorizontalPixelOrdering, VerticalPixelOrdering } from "./parse-tga-file-metadata.js";
+import { hexStringToNumericValue } from "../hex-helpers.js";
+import { HorizontalPixelOrdering, VerticalPixelOrdering } from "../parse-tga-file-metadata.js";
+import { ParseTgaFileImageDataInput, ParseTgaFileImageDataOutput } from "./parse-tga-file-image-data";
 
-interface ParseTgaFileImageDataInput {
-  hexTgaFileData: string;
-  bytesReadForMetadata: number;
-  numberOfChannels: 3 | 4;
-  imageWidthPx: number;
-  imageHeightPx: number;
-  horizontalPixelOrdering: HorizontalPixelOrdering;
-  verticalPixelOrdering: VerticalPixelOrdering;
-}
-
-interface ParseTgaFileImageDataOutput {
-  pixelArray: Uint8Array;
-  bytesReadForImageData: number;
-}
-
-export const parseTgaFileImageData = (
+export const parseUnencodedTrueColourTgaFileImageData = (
   input: ParseTgaFileImageDataInput
 ): ParseTgaFileImageDataOutput => {
-  const bytesReadForImageData = 0;
+  let bytesReadForImageData = 0;
 
   const startRowIndex = input.verticalPixelOrdering === VerticalPixelOrdering.TOP_TO_BOTTOM
     ? 0
@@ -40,40 +26,40 @@ export const parseTgaFileImageData = (
     while(currentColIndex >= 0 && currentColIndex < input.imageWidthPx) {
       if(input.numberOfChannels === 4) {
         const green = hexStringToNumericValue(input.hexTgaFileData.slice(
-          (input.bytesReadForMetadata * 2) + (8 * indexInHexTgaFileData) + 0,
-          (input.bytesReadForMetadata * 2) + (8 * indexInHexTgaFileData) + 2,
+          (input.bytesReadForMetadata * 2) + (bytesReadForImageData * 2) + 0,
+          (input.bytesReadForMetadata * 2) + (bytesReadForImageData * 2) + 2,
         ));
         const blue = hexStringToNumericValue(input.hexTgaFileData.slice(
-          (input.bytesReadForMetadata * 2) + (8 * indexInHexTgaFileData) + 2,
-          (input.bytesReadForMetadata * 2) + (8 * indexInHexTgaFileData) + 4,
+          (input.bytesReadForMetadata * 2) + (bytesReadForImageData * 2) + 2,
+          (input.bytesReadForMetadata * 2) + (bytesReadForImageData * 2) + 4,
         ));
         const red = hexStringToNumericValue(input.hexTgaFileData.slice(
-          (input.bytesReadForMetadata * 2) + (8 * indexInHexTgaFileData) + 4,
-          (input.bytesReadForMetadata * 2) + (8 * indexInHexTgaFileData) + 6,
+          (input.bytesReadForMetadata * 2) + (bytesReadForImageData * 2) + 4,
+          (input.bytesReadForMetadata * 2) + (bytesReadForImageData * 2) + 6,
         ));
         const alpha = hexStringToNumericValue(input.hexTgaFileData.slice(
-          (input.bytesReadForMetadata * 2) + (8 * indexInHexTgaFileData) + 6,
-          (input.bytesReadForMetadata * 2) + (8 * indexInHexTgaFileData) + 8,
+          (input.bytesReadForMetadata * 2) + (bytesReadForImageData * 2) + 6,
+          (input.bytesReadForMetadata * 2) + (bytesReadForImageData * 2) + 8,
         ));
-
+        
         if(input.horizontalPixelOrdering === HorizontalPixelOrdering.LEFT_TO_RIGHT) {
           currentRow.push([ red, blue, green, alpha ]);
         } else {
           currentRow.unshift([ red, blue, green, alpha ]);
         }
-        indexInHexTgaFileData++;
+        bytesReadForImageData += 4;
       } else {
         const green = hexStringToNumericValue(input.hexTgaFileData.slice(
-          (input.bytesReadForMetadata * 2) + (6 * indexInHexTgaFileData) + 0,
-          (input.bytesReadForMetadata * 2) + (6 * indexInHexTgaFileData) + 2,
+          (input.bytesReadForMetadata * 2) + (bytesReadForImageData * 2) + 0,
+          (input.bytesReadForMetadata * 2) + (bytesReadForImageData * 2) + 2,
         ));
         const blue = hexStringToNumericValue(input.hexTgaFileData.slice(
-          (input.bytesReadForMetadata * 2) + (6 * indexInHexTgaFileData) + 2,
-          (input.bytesReadForMetadata * 2) + (6 * indexInHexTgaFileData) + 4,
+          (input.bytesReadForMetadata * 2) + (bytesReadForImageData * 2) + 2,
+          (input.bytesReadForMetadata * 2) + (bytesReadForImageData * 2) + 4,
         ));
         const red = hexStringToNumericValue(input.hexTgaFileData.slice(
-          (input.bytesReadForMetadata * 2) + (6 * indexInHexTgaFileData) + 4,
-          (input.bytesReadForMetadata * 2) + (6 * indexInHexTgaFileData) + 6,
+          (input.bytesReadForMetadata * 2) + (bytesReadForImageData * 2) + 4,
+          (input.bytesReadForMetadata * 2) + (bytesReadForImageData * 2) + 6,
         ));
 
         if(input.horizontalPixelOrdering === HorizontalPixelOrdering.LEFT_TO_RIGHT) {
@@ -81,7 +67,7 @@ export const parseTgaFileImageData = (
         } else {
           currentRow.unshift([ red, blue, green ]);
         }
-        indexInHexTgaFileData++;
+        bytesReadForImageData += 3;
       }
 
       if(input.horizontalPixelOrdering === HorizontalPixelOrdering.LEFT_TO_RIGHT) {
