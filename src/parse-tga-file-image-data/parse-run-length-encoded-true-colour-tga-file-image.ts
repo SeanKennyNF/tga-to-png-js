@@ -1,5 +1,5 @@
 import { bitValuesToNumericValue, hexStringToBitValues, hexStringToNumericValue } from "../hex-helpers.js";
-import { HorizontalPixelOrdering, VerticalPixelOrdering } from "../parse-tga-file-metadata.js";
+import { VerticalPixelOrdering } from "../parse-tga-file-metadata.js";
 import { ParseTgaFileImageDataInput, ParseTgaFileImageDataOutput } from "./parse-tga-file-image-data.js";
 
 export const parseRunLengthEncodedTrueColourTgaFileImageData = (
